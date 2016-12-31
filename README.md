@@ -3,6 +3,7 @@
 Modelizor is a tool to automatically create Model-files (see supported lanugages below) from a database schema.
 
 [![Build Status](https://travis-ci.org/liminaab/modelizor.svg?branch=master)](https://travis-ci.org/liminaab/modelizor)
+[![codecov](https://codecov.io/gh/liminaab/modelizor/branch/master/graph/badge.svg)](https://codecov.io/gh/liminaab/modelizor)
 
 Supported languages: None yet... soon Java and then Golang.
 
