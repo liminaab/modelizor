@@ -1,0 +1,13 @@
+{
+  "name": "modelizor",
+  "version": "0.0.1",
+  "description": "Creates model files from a given DB-schema Edit",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kristoffer Fürst",
+  "dependencies": {
+    "sequelize": "3.28.0"
+  }
+}
