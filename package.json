@@ -4,7 +4,7 @@
   "description": "Creates model files from a given DB-schema Edit",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No test are created for this package\""
   },
   "author": "Kristoffer Fürst",
   "dependencies": {
