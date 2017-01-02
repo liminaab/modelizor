@@ -4,10 +4,22 @@
   "description": "Creates model files from a given DB-schema Edit",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"No test are created for this package\""
+    "test": "istanbul cover node_modules/mocha/bin/_mocha",
+    "coverage": "codecov"
   },
   "author": "Kristoffer Fürst",
   "dependencies": {
     "sequelize": "3.28.0"
-  }
+  },
+  "devDependencies": {
+    "codecov": "^1.0.0",
+    "expect.js": "^0.3.1",
+    "istanbul": "^0.3.2",
+    "mocha": "^2.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liminaab/modelizor"
+  },
+  "license": "MIT"
 }

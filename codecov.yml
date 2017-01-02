@@ -1,2 +1,7 @@
 codecov:
   branch: master
+
+coverage:
+  parsers:
+    javascript:
+      enable_partials: yes
