@@ -5,11 +5,12 @@
   "main": "app.js",
   "scripts": {
     "test": "istanbul cover node_modules/mocha/bin/_mocha",
-    "coverage": "codecov"
+    "coverage": "codecov",
+    "start": "node app.js"
   },
   "author": "Kristoffer Fürst",
   "dependencies": {
-    "sequelize": "3.28.0"
+    "mysql": "2.12.0"
   },
   "devDependencies": {
     "codecov": "^1.0.0",
