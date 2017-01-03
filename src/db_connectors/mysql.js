@@ -1,30 +1,40 @@
+var mysql = require("mysql");
+var connection = null;
 
-function getTableDefinition(dbSchema, tableName) {
-	var mysql = require("mysql");
-
-	var connection = mysql.createConnection({
+function connect() {
+	connection = mysql.createConnection({
 		host: 'localhost',
 		port: '8889',
 		user: 'root',
 		password: 'root',
 		database: 'modelizor_test'
 	});
+	return this;
+}
 
+function getTableDefinition(dbSchema, tableName) {
 	connection.query(
 			'select * ' +
 			'From '+
-				'INFORMATION_SCHEMA.COLUMNS As C Left Join '+
-				'INFORMATION_SCHEMA.TABLE_CONSTRAINTS As TC '+
-			'On '+
-				'TC.TABLE_SCHEMA = C.TABLE_SCHEMA And '+
-				'TC.TABLE_NAME = C.TABLE_NAME And '+
-				'TC.CONSTRAINT_TYPE = \'PRIMARY KEY\' '+
+				'INFORMATION_SCHEMA.COLUMNS As C '+
 			'Where '+
 				'C.TABLE_NAME = \'' + tableName +'\' and '+
 				'C.TABLE_SCHEMA = \'' + dbSchema +'\'',
 			function(error, rows, fields) {
 		console.log(rows);
 	});
+
+	connection.query(
+			'select * ' +
+			'From '+
+				'INFORMATION_SCHEMA.KEY_COLUMN_USAGE As TC '+
+			'Where '+
+				'TC.TABLE_NAME = \'' + tableName +'\' and '+
+				'TC.TABLE_SCHEMA = \'' + dbSchema +'\'',
+			function(error, rows, fields) {
+		console.log(rows);
+	});
 }
 
+exports.connect = connect;
 exports.getTableDefinition = getTableDefinition;
