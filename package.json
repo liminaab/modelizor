@@ -10,7 +10,8 @@
   },
   "author": "Kristoffer Fürst",
   "dependencies": {
-    "mysql": "2.12.0"
+    "mysql": "2.12.0",
+    "pg": "6.1.2"
   },
   "devDependencies": {
     "codecov": "^1.0.0",
