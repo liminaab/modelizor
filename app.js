@@ -1,3 +1,3 @@
-var dbConnection = require('./src/DB_connector.js');
+var dbConnection = require('./src/db_connectors/mysql.js');
 
-dbConnection.toStuff();
+dbConnection.getTableDefinition('modelizor_test', 'pets');

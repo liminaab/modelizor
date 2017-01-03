@@ -1,5 +1,5 @@
 
-function toStuff() {
+function getTableDefinition(dbSchema, tableName) {
 	var mysql = require("mysql");
 
 	var connection = mysql.createConnection({
@@ -11,7 +11,7 @@ function toStuff() {
 	});
 
 	connection.query(
-			'select * ' + 
+			'select * ' +
 			'From '+
 				'INFORMATION_SCHEMA.COLUMNS As C Left Join '+
 				'INFORMATION_SCHEMA.TABLE_CONSTRAINTS As TC '+
@@ -20,11 +20,11 @@ function toStuff() {
 				'TC.TABLE_NAME = C.TABLE_NAME And '+
 				'TC.CONSTRAINT_TYPE = \'PRIMARY KEY\' '+
 			'Where '+
-				'C.TABLE_NAME = \'pets\' and '+
-				'C.TABLE_SCHEMA = \'modelizor_test\'' , 
+				'C.TABLE_NAME = \'' + tableName +'\' and '+
+				'C.TABLE_SCHEMA = \'' + dbSchema +'\'',
 			function(error, rows, fields) {
 		console.log(rows);
 	});
 }
 
-exports.toStuff = toStuff;
+exports.getTableDefinition = getTableDefinition;
