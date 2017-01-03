@@ -21,7 +21,9 @@ Please note that Modelizor is a tool for automatic code generation, i.e. it is n
 
 ## How it works
 
-[Sequelize](https://github.com/sequelize/sequelize/blob/master/README.md) is used to access the database structure. Foreign keys etc are used to identify mapping tables, guess annotations and so on. The project creates files to the respective language it supports (e.g. .java or .go) in the folder where it is run. These can then be moved (or parts of the generated code copied) into your source code.
+The app connects directly to the dabase via a node library for every type of database. SQL queries are used to extract the table definitions.
+
+Foreign keys etc are used to identify mapping tables, guess annotations and so on. The project creates files to the respective language it supports (e.g. .java or .go) in the folder where it is run. These can then be moved (or parts of the generated code copied) into your source code.
 
 ## ToDo
 
