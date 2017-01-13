@@ -4,7 +4,16 @@ function createFile(fileTemplateFolder, results) {
 
 	var tableName = results[0].TABLE_NAME;
 	var body = generatorModel.createBody(tableName);
-	console.log(body);
+
+	var paramsBody = '';
+	for(var i=0; i<results.length; i++) {
+		var paramBody = generatorParam.createBody(results[i]);
+		console.log(paramBody);
+		break;
+	}
+/*
+	body.replace('PARAMS', paramBody);
+	console.log(body);*/
 }
 
 exports.createFile = createFile;

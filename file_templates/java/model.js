@@ -16,6 +16,8 @@ function createBody(tableName) {
 	'@Audited\n' +
 	'public class '+tableName+' {\n' +
 	'\n' +
+	'VARIABLES' +
+	'\n' +
 	'	public ' + tableName + '() {\n' +
 	'		// auto-generated from Modelizor\n' +
 	'	}\n' +
