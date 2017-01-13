@@ -8,12 +8,12 @@ function createFile(fileTemplateFolder, results) {
 	var paramsBody = '';
 	for(var i=0; i<results.length; i++) {
 		var paramBody = generatorParam.createBody(results[i]);
-		console.log(paramBody);
-		break;
+		paramsBody += paramBody;
 	}
-/*
-	body.replace('PARAMS', paramBody);
-	console.log(body);*/
+
+	body = body.replace('PARAMS', paramsBody);
+	console.log(body);
+	console.log(results);
 }
 
 exports.createFile = createFile;

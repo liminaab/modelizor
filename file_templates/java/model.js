@@ -22,7 +22,7 @@ function createBody(tableName) {
 	'		// auto-generated from Modelizor\n' +
 	'	}\n' +
 	'\n' +
-	'	PARAMS\n' +
+	'PARAMS\n' +
 	'}\n' +
 	'';
 }
