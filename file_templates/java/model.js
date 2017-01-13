@@ -1,4 +1,5 @@
 var upperCamelCase = require('uppercamelcase');
+var pluralize = require('pluralize');
 
 function createBody(tableName) {
 	return '' +
@@ -16,11 +17,11 @@ function createBody(tableName) {
 	'@Entity\n' +
 	'@Table(name=\"'+tableName+'\")\n' +
 	'@Audited\n' +
-	'public class '+upperCamelCase(tableName)+' {\n' +
+	'public class '+upperCamelCase(pluralize.singular(tableName))+' {\n' +
 	'\n' +
 	'VARIABLES' +
 	'\n' +
-	'	public ' + upperCamelCase(tableName) + '() {\n' +
+	'	public ' + upperCamelCase(pluralize.singular(tableName)) + '() {\n' +
 	'		// auto-generated from Modelizor\n' +
 	'	}\n' +
 	'\n' +
