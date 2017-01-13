@@ -1,5 +1,5 @@
-function createVariable(paramInfo) { // public
-	return paramInfo.COLUMN_NAME;
+function getVariableDeclaration(paramInfo) { // private
+	return '	private ' + getType(paramInfo) + ' ' + createVariable(paramInfo) + ';\n';
 }
 
 function createBody(paramInfo) { // public
@@ -21,6 +21,10 @@ function createBody(paramInfo) { // public
 			'\n';
 }
 
+function createVariable(paramInfo) { // private
+	return paramInfo.COLUMN_NAME;
+}
+
 function columnAnnotation(paramInfo) { // private
 	var nullable = 'true';
 	if (paramInfo.IS_NULLABLE == 'NO') {
@@ -32,16 +36,27 @@ function columnAnnotation(paramInfo) { // private
 }
 
 function getType(paramInfo) { // private
-	var dbType = paramInfo.COLUMN_TYPE;
+	var dbType = paramInfo.DATA_TYPE;
 	switch (dbType) {
-		case 'int(11)':
+		case 'int':
 			return 'Integer';
+		case 'bigint':
+			return 'Long';
+		case 'tinyint':
+			return 'Boolean';
+		case 'double':
+		case 'decimal':
+			return 'Double';
+		case 'float':
+			return 'Float';
 		case 'text':
 			return 'String';
+		case 'date':
+			return 'ZonedDateTime';
 		default:
 			throw new Error('Can\'t handle data type:' + dbType);
 	}
 }
 
 exports.createBody = createBody;
-exports.createVariable = createVariable;
+exports.getVariableDeclaration = getVariableDeclaration;
