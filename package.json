@@ -11,6 +11,8 @@
   "author": "Kristoffer Fürst",
   "dependencies": {
     "mysql": "2.12.0",
+    "uppercamelcase": "1.1.0",
+    "camelcase": "4.0.0",
     "pg": "6.1.2"
   },
   "devDependencies": {
