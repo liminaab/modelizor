@@ -1,3 +1,6 @@
+var upperCamelCase = require('uppercamelcase');
+var camelCase = require('camelcase');
+
 function getVariableDeclaration(paramInfo) { // private
 	return '	private ' + getType(paramInfo) + ' ' + createVariable(paramInfo) + ';\n';
 }
@@ -9,20 +12,24 @@ function createBody(paramInfo) { // public
 	}
 
 	return '' +
-			'	// ---- ---- ' + createVariable(paramInfo) + ' ---- ---- //\n' +
+			'	// ---- ---- ' + createVariableUpper(paramInfo) + ' ---- ---- //\n' +
 			idRow +
 			columnAnnotation(paramInfo) +
-			'	public ' + getType(paramInfo) + ' get' + createVariable(paramInfo) + '() {\n' +
+			'	public ' + getType(paramInfo) + ' get' + createVariableUpper(paramInfo) + '() {\n' +
 			'		return ' + createVariable(paramInfo) + ';\n' +
 			'	}\n' +
-			'	public void set' + createVariable(paramInfo) + '(' + getType(paramInfo) + ' ' + createVariable(paramInfo) + ') {\n' +
+			'	public void set' + createVariableUpper(paramInfo) + '(' + getType(paramInfo) + ' ' + createVariable(paramInfo) + ') {\n' +
 			'		this.' + createVariable(paramInfo) + ' = ' + createVariable(paramInfo) + ';\n' +
 			'	}\n' +
 			'\n';
 }
 
+function createVariableUpper(paramInfo) { // private
+	return upperCamelCase(createVariable(paramInfo));
+}
+
 function createVariable(paramInfo) { // private
-	return paramInfo.COLUMN_NAME;
+	return camelCase(paramInfo.COLUMN_NAME);
 }
 
 function columnAnnotation(paramInfo) { // private

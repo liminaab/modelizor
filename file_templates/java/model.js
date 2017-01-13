@@ -1,3 +1,5 @@
+var upperCamelCase = require('uppercamelcase');
+
 function createBody(tableName) {
 	return '' +
 	'package '+ javaPackage +';\n'+
@@ -14,11 +16,11 @@ function createBody(tableName) {
 	'@Entity\n' +
 	'@Table(name=\"'+tableName+'\")\n' +
 	'@Audited\n' +
-	'public class '+tableName+' {\n' +
+	'public class '+upperCamelCase(tableName)+' {\n' +
 	'\n' +
 	'VARIABLES' +
 	'\n' +
-	'	public ' + tableName + '() {\n' +
+	'	public ' + upperCamelCase(tableName) + '() {\n' +
 	'		// auto-generated from Modelizor\n' +
 	'	}\n' +
 	'\n' +
