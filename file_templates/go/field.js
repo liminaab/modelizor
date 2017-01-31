@@ -2,7 +2,7 @@ var upperCamelCase = require('uppercamelcase');
 var camelCase = require('camelcase');
 
 function create(paramInfo) { // private
-    return ' ' + createVariableUpper(paramInfo) + ' ' + getType(paramInfo) + ';\n';
+    return ' ' + createVariableUpper(paramInfo) + ' ' + getType(paramInfo);
 }
 
 function isNullable(paramInfo) {

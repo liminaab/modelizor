@@ -1,5 +1,3 @@
-const fs = require('fs')
-
 function createFile(fileTemplateFolder, results) {
     let creator = require('./../file_templates/' + fileTemplateFolder + '/creator.js');
     let file = creator.create(results)

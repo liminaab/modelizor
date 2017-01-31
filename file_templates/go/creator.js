@@ -1,6 +1,7 @@
  const model = require('./model.js');
  const field = require('./field.js');
  const type = require('./type.js');
+ const fs = require('fs')
 
  function create(results) {
 
@@ -10,7 +11,7 @@
      })
 
      completedFile = model.create(typeName, fields);
-     fs.writeFileSync(typeName + ".go", completedFile)
+     fs.writeFileSync(__dirname + "/" + typeName + ".go", completedFile)
 
      return completedFile;
 
