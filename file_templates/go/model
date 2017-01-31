@@ -1,0 +1,9 @@
+package models
+
+type TYPE_NAME struct {
+	FIELDS
+}
+
+type TYPE_NAME_AUD {
+	FIELDS
+}
