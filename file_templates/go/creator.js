@@ -4,36 +4,40 @@
  const fs = require('fs')
 
  function create(conf, results) {
+
      tableName = results.ownColumns[0].TABLE_NAME;
      let typeName = type.create(tableName);
-
-     let audTableName = tableName + "_aud";
 
      let fields = results.ownColumns.map((row) => {
          return field.structField(row);
      })
 
-     let audCopyFields = results.ownColumns.map((row) => {
-         return field.copyField(row);
-     })
-
-     let relations = results.hasMany.map((row) => {
+     fields = fields.concat(results.hasMany.map((row) => {
          return field.relationHasMany(row)
-     })
+     }))
 
-     relations = relations.concat(results.many2Many.map((row) => {
+     fields = fields.concat(results.many2Many.map((row) => {
          return field.relationMany2Many(row);
      }))
 
-     relations = relations.concat(results.ownColumns.map((row) => {
+     fields = fields.concat(results.ownColumns.map((row) => {
          return field.relationHasOne(conf.fk_prefix, row)
      }).filter(row => {
          return row !== undefined
      }))
 
-     fields = fields.concat(relations)
+     //@TODO: Add belongsTo
+
+     //@TODO: Add audit for many2many?
+     //@TODO: Add option to toggle if there should be audit functionality in the conf
+     let audTableName = tableName + "_aud";
+
+     let audCopyFields = results.ownColumns.map((row) => {
+         return field.copyField(row);
+     })
 
      completedFile = model.create(typeName, fields, audCopyFields, audTableName);
+     //@TODO: Outputdir should be in conf, along with some rules if you want in different folders (mainly for java maybe)
      fs.writeFileSync(__dirname + "/" + typeName + ".go", completedFile)
 
      return completedFile;

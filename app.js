@@ -1,6 +1,8 @@
 let drivers = require('./src/drivers.js');
 let fileCreator = require('./src/file_creator.js');
 let Q = require('q')
+
+//@TODO: Make globally installable and take a config file instead of this hard coded
 const confs = [{
     driver: drivers.postgres,
     host: 'localhost',
@@ -27,7 +29,7 @@ const confs = [{
 confs.forEach((conf) => {
     conf.tables.forEach((table) => {
 
-        let dbConnection = require('./src/db_connectors/pg.js').connect(conf);
+        let dbConnection = require('./src/db_connectors/' + conf.driver + '.js').connect(conf);
 
         let relevantConf = {
             target: conf.target,
