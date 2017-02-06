@@ -1,4 +1,5 @@
 var pg = require("pg");
+var Q = require("q");
 var queries = require('../helpers/queries.js');
 let drivers = require('../drivers.js');
 
@@ -10,46 +11,51 @@ function connect(config) {
     return this;
 }
 
-function getTableDefinition(dbSchema, tableName, callback) {
+function execute(query) {
+    let p = Q.defer();
     connection.query(
-        queries.getTableDefinitionQuery(dbSchema, tableName, "pg"),
+        query,
         function(error, result) {
             if (error) {
-                throw Error("DB error trying to get table definition in " + __filename)
+                p.reject(error);
+                console.error(error)
+                return;
             }
-            rows = convertToStandardFormat(result.rows)
-
-            callback(rows);
+            rows = convertToStandardFormat(result.rows);
+            p.resolve(rows);
         }
     )
+    return p.promise;
 }
+
+function getTableDefinition(conf) {
+    return execute(queries.getTableDefinitionQuery(conf))
+}
+
+function getRelationsToTable(conf) {
+    return execute(queries.getRelationsToTable(conf))
+}
+
+function getMany2Many(conf) {
+    return execute(queries.getMany2Many(conf))
+}
+
 
 function convertToStandardFormat(rows) {
-    let stdFormat = [];
     return rows.map((row) => {
-        return {
-            "TABLE_NAME": row["table_name"],
-            "COLUMN_NAME": row["column_name"],
-            "COLUMN_DEFAULT": row["column_default"],
-            "IS_NULLABLE": row["is_nullable"],
-            "DATA_TYPE": row["data_type"],
-            "CONSTRAINT_NAME": row["constraint_name"],
-            "REFERENCED_TABLE_SCHEMA": row["referenced_table_schema"],
-            "REFERENCED_TABLE_NAME": row["referenced_table_name"],
-            "REFERENCED_COLUMN_NAME": row["referenced_column_name"],
-        }
-
+        let obj = {};
+        Object.keys(row).forEach((key) => {
+            upper = key.toUpperCase();
+            obj[upper] = row[key];
+        })
+        return obj
     })
+
 }
-
-
-
-
-
-
-
 
 
 
 exports.connect = connect;
 exports.getTableDefinition = getTableDefinition;
+exports.getRelationsToTable = getRelationsToTable;
+exports.getMany2Many = getMany2Many;

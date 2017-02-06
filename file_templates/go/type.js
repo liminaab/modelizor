@@ -4,7 +4,7 @@ var fs = require('fs');
 
 
 function create(tableName) {
-    return upperCamelCase(tableName);
+    return upperCamelCase(pluralize.singular(tableName));
 }
 
 exports.create = create;

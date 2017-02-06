@@ -1,4 +1,2 @@
-exports = {
-    postgres: "pg",
-    mysql: "mysql",
-}
+exports.postgres = "pg";
+exports.mysql = "mysql";
