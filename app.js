@@ -1,5 +1,7 @@
 let drivers = require('./src/drivers.js');
 let fileCreator = require('./src/file_creator.js');
+let queries = require('./src/helpers/queries.js');
+
 let Q = require('q')
 
 //@TODO: Make globally installable and take a config file instead of this hard coded
@@ -39,9 +41,9 @@ confs.forEach((conf) => {
             schema: conf.schema,
         }
 
-        let rows = dbConnection.getTableDefinition(relevantConf);
-        let relationsTo = dbConnection.getRelationsToTable(relevantConf);
-        let many2Many = dbConnection.getMany2Many(relevantConf);
+        let rows = dbConnection.execute(queries.getTableDefinitionQuery(relevantConf))
+        let relationsTo = dbConnection.execute(queries.getRelationsToTable(relevantConf))
+        let many2Many = dbConnection.execute(queries.getMany2Many(relevantConf))
         Q.allSettled([rows, relationsTo, many2Many]).then((results) => {
 
             columns = results[0];

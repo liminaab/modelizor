@@ -37,12 +37,10 @@
      })
 
      completedFile = model.create(typeName, fields, audCopyFields, audTableName);
-     //@TODO: Outputdir should be in conf, along with some rules if you want in different folders (mainly for java maybe)
+     //@TODO: Outputdir should be in conf, along with some rules if you want in different folders (mainly for java i guess)
      fs.writeFileSync(__dirname + "/" + typeName + ".go", completedFile)
 
      return completedFile;
-
  }
-
 
  exports.create = create;

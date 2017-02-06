@@ -28,19 +28,6 @@ function execute(query) {
     return p.promise;
 }
 
-function getTableDefinition(conf) {
-    return execute(queries.getTableDefinitionQuery(conf))
-}
-
-function getRelationsToTable(conf) {
-    return execute(queries.getRelationsToTable(conf))
-}
-
-function getMany2Many(conf) {
-    return execute(queries.getMany2Many(conf))
-}
-
-
 function convertToStandardFormat(rows) {
     return rows.map((row) => {
         let obj = {};
@@ -50,12 +37,10 @@ function convertToStandardFormat(rows) {
         })
         return obj
     })
-
 }
 
-
-
 exports.connect = connect;
+exports.execute = execute;
 exports.getTableDefinition = getTableDefinition;
 exports.getRelationsToTable = getRelationsToTable;
 exports.getMany2Many = getMany2Many;

@@ -28,7 +28,6 @@ function relationMany2Many(relationInfo) {
     return fieldName + '   []' + typeName + '   `gorm:"many2many:' + relationInfo.TABLE_NAME + ';"`';
 }
 
-
 //@TODO: make function for this that checks different formats for "YES", depending on db, if there are differences
 function isNullable(paramInfo) {
     return paramInfo.IS_NULLABLE === "YES";
