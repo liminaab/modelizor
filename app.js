@@ -35,7 +35,6 @@ confs.forEach((conf) => {
     let tableCount = conf.tables.length;
     conf.tables.forEach((table) => {
 
-
         let dbConnection = require('./src/db_connectors/' + conf.driver + '.js').connect(conf);
 
         let relevantConf = {
@@ -51,6 +50,7 @@ confs.forEach((conf) => {
         let rows = dbConnection.execute(queries.getTableDefinitionQuery(relevantConf))
         let relationsTo = dbConnection.execute(queries.getRelationsToTable(relevantConf))
         let many2Many = dbConnection.execute(queries.getMany2Many(relevantConf))
+
         Q.allSettled([rows, relationsTo, many2Many]).then((results) => {
 
             columns = results[0];

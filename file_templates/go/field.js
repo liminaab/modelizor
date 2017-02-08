@@ -39,10 +39,6 @@ function isHasOne(fkPrefix, paramInfo) {
     return paramInfo.CONSTRAINT_NAME !== null && paramInfo.CONSTRAINT_NAME.indexOf(fkPrefix) !== -1
 }
 
-function getTag(paramInfo) {
-    console.log("get tag med detta", paramInfo)
-}
-
 function createVariableUpper(dbName) { // private
     let name = upperCamelCase(dbName);
     name = name.replace(/Id[^a-z|]|Id$/g, "ID")

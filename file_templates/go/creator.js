@@ -1,18 +1,19 @@
  const model = require('./model.js');
  const field = require('./field.js');
  const type = require('./type.js');
+ const imports = require('./imports.js');
  const fs = require('fs')
 
  function create(conf, results) {
 
      tableName = results.ownColumns[0].TABLE_NAME;
      let typeName = type.create(tableName);
-     let imports = {};
+     let importObj = {};
      let fields = results.ownColumns.map((row) => {
          let f = field.structField(row);
          //can only be time right now, make generic if this grows
          if (f.indexOf("time.") !== -1) {
-             imports["time"] = true
+             importObj["time"] = true
          }
          return f
      })
@@ -41,9 +42,9 @@
          return field.copyField(row);
      })
 
-     let importsArr = conf.imports.concat(Object.keys(imports))
-
-     completedFile = model.create(typeName, fields, audCopyFields, audTableName, importsArr, conf.dbGetter);
+     let importsArr = conf.imports.concat(Object.keys(importObj))
+     let importString = imports.create(importsArr)
+     completedFile = model.create(typeName, fields, audCopyFields, audTableName, importString, conf.dbGetter);
      //@TODO: Outputdir should be in conf, along with some rules if you want in different folders (mainly for java i guess)
      return {
          name: typeName + ".go",
