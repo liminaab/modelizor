@@ -10,6 +10,7 @@ function copyField(paramInfo) {
     return 'aud.' + createVariableUpper(paramInfo.COLUMN_NAME) + ' = t.' + createVariableUpper(paramInfo.COLUMN_NAME);
 }
 
+//this one was easy to join in the main select, thats why we do a check on the column instead to see if there is a relation
 function relationHasOne(fkPrefix, paramInfo) {
     if (isHasOne(fkPrefix, paramInfo)) {
         return createVariableUpper(paramInfo.COLUMN_NAME.replace(/_id$/, '')) + " " + createVariableUpper(paramInfo.COLUMN_NAME.replace(/_id$/, ''))

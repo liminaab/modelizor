@@ -7,9 +7,14 @@
 
      tableName = results.ownColumns[0].TABLE_NAME;
      let typeName = type.create(tableName);
-
+     let imports = {};
      let fields = results.ownColumns.map((row) => {
-         return field.structField(row);
+         let f = field.structField(row);
+         //can only be time right now, make generic if this grows
+         if (f.indexOf("time.") !== -1) {
+             imports["time"] = true
+         }
+         return f
      })
 
      fields = fields.concat(results.hasMany.map((row) => {
@@ -36,11 +41,17 @@
          return field.copyField(row);
      })
 
-     completedFile = model.create(typeName, fields, audCopyFields, audTableName);
-     //@TODO: Outputdir should be in conf, along with some rules if you want in different folders (mainly for java i guess)
-     fs.writeFileSync(__dirname + "/" + typeName + ".go", completedFile)
+     let importsArr = conf.imports.concat(Object.keys(imports))
 
-     return completedFile;
+     completedFile = model.create(typeName, fields, audCopyFields, audTableName, importsArr, conf.dbGetter);
+     //@TODO: Outputdir should be in conf, along with some rules if you want in different folders (mainly for java i guess)
+     return {
+         name: typeName + ".go",
+         content: completedFile
+     }
+
+
+
  }
 
  exports.create = create;

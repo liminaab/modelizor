@@ -13,6 +13,8 @@ const confs = [{
     database: 'queue',
     schema: 'public',
     target: 'go',
+    dbGetter: 'app.DB()',
+    imports: ['limina/queue/app'],
     tables: ['bills', 'dogs', 'products', 'puppies', 'houses'],
     fk_prefix: "fk_"
 }];
@@ -29,7 +31,10 @@ const confs = [{
 // dbConnection.getTableDefinition('modelizor_test', 'pets', callback);
 
 confs.forEach((conf) => {
+    let i = 0;
+    let tableCount = conf.tables.length;
     conf.tables.forEach((table) => {
+
 
         let dbConnection = require('./src/db_connectors/' + conf.driver + '.js').connect(conf);
 
@@ -39,6 +44,8 @@ confs.forEach((conf) => {
             fk_prefix: conf.fk_prefix,
             driver: conf.driver,
             schema: conf.schema,
+            dbGetter: conf.dbGetter,
+            imports: conf.imports
         }
 
         let rows = dbConnection.execute(queries.getTableDefinitionQuery(relevantConf))
@@ -56,8 +63,11 @@ confs.forEach((conf) => {
                 many2Many: many2Many.value,
             }
             fileCreator.createFile(relevantConf, rows);
+
         }).catch((err) => {
             console.log(err)
+        }).finally(() => {
+            dbConnection.close();
         })
     })
 
