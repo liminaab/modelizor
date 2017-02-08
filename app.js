@@ -4,25 +4,20 @@ let fs = require('fs')
 let drivers = require('./src/drivers.js');
 let fileCreator = require('./src/file_creator.js');
 let queries = require('./src/helpers/queries.js');
-
+let config = require('./src/conf');
 let Q = require('q')
 
 
-let confFilePath = process.argv[2];
-let pathArr = confFilePath.split("/");
-pathArr.pop();
-let confpath = pathArr.join("/");
-let cwd = process.cwd();
-path = cwd + "/" + confpath
+let argument = process.argv[2];
 
-let confFile = fs.readFileSync(confFilePath, "utf8")
-let confs = JSON.parse(confFile)
+let confs = config.get(argument)
 
 confs.forEach((conf) => {
-    let i = 0;
-    let tableCount = conf.tables.length;
-    conf.tables.forEach((table) => {
+    config.setDefaultValues(conf)
+    config.validate(conf)
 
+
+    conf.tables.forEach((table) => {
         let dbConnection = require('./src/db_connectors/' + conf.driver + '.js').connect(conf);
 
         let relevantConf = {
@@ -33,7 +28,7 @@ confs.forEach((conf) => {
             schema: conf.schema,
             dbGetter: conf.dbGetter,
             imports: conf.imports,
-            outputdir: path + "/" + conf.outputdir
+            outputdir: conf.outputdir
         }
 
         let rows = dbConnection.execute(queries.getTableDefinitionQuery(relevantConf))
