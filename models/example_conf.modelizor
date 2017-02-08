@@ -1,4 +1,4 @@
-{
+[{
     "driver": "pg",
     "host": "localhost",
     "user": "postgres",
@@ -10,4 +10,4 @@
     "imports": ["limina/queue/app"],
     "tables": ["bills", "dogs", "products", "puppies", "houses"],
     "fk_prefix": "fk_"
-}
+}]

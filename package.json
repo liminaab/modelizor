@@ -9,7 +9,7 @@
         "start": "node app.js"
     },
     "bin": {
-        "modelize": "app.js"
+        "modelizor": "app.js"
     },
     "author": "Kristoffer Fürst",
     "dependencies": {

@@ -10,12 +10,22 @@ let Q = require('q')
 
 let argument = process.argv[2];
 
+if (argument === undefined || argument === "help" || argument === "-h" || argument === "--help") {
+    displayHelp()
+    return
+}
+if (argument == "init") {
+    spitOutDefaultConf()
+    return
+}
+
+
+
 let confs = config.get(argument)
 
 confs.forEach((conf) => {
     config.setDefaultValues(conf)
     config.validate(conf)
-
 
     conf.tables.forEach((table) => {
         let dbConnection = require('./src/db_connectors/' + conf.driver + '.js').connect(conf);
@@ -56,3 +66,29 @@ confs.forEach((conf) => {
     })
 
 })
+
+function spitOutDefaultConf() {
+    let filename = "modelizor_template_" + Date.now() + ".conf"
+    let content = `[{
+    "driver": "pg",
+    "host": "localhost",
+    "user": "postgres",
+    "password": "p4ssw0rd",
+    "database": "mydb",
+    "schema": "public",
+    "target": "go",
+    "dbGetter": "app.DB",
+    "imports": ["project/app"],
+    "tables": ["users", "products", "orders"],
+    "fk_prefix": "fk_"
+}`
+    fs.writeFileSync(filename, content, "utf8", "w");
+}
+
+function displayHelp() {
+    console.log(`
+    modelizor help              - this help message
+    modelizor init              - creates a standard conf file for you to fill in
+    modelizor pathToConffile    - creates models accordiing to conf
+    `)
+}
