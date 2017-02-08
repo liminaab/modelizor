@@ -1,34 +1,22 @@
+#!/usr/bin/env node
+
+let fs = require('fs')
 let drivers = require('./src/drivers.js');
 let fileCreator = require('./src/file_creator.js');
 let queries = require('./src/helpers/queries.js');
 
 let Q = require('q')
 
-//@TODO: Make globally installable and take a config file instead of this hard coded
-const confs = [{
-    driver: drivers.postgres,
-    host: 'localhost',
-    user: 'postgres',
-    password: 'postgres',
-    database: 'queue',
-    schema: 'public',
-    target: 'go',
-    dbGetter: 'app.DB()',
-    imports: ['limina/queue/app'],
-    tables: ['bills', 'dogs', 'products', 'puppies', 'houses'],
-    fk_prefix: "fk_"
-}];
 
+let confFilePath = process.argv[2];
+let pathArr = confFilePath.split("/");
+pathArr.pop();
+let confpath = pathArr.join("/");
+let cwd = process.cwd();
+path = cwd + "/" + confpath
 
-// var fileTemplateFolder = 'java';
-// javaPackage = 'com.limina.module1';
-
-// var callback =  function(result) {
-// 	var fileCreator = require('./src/file_creator.js');
-// 	fileCreator.createFile(fileTemplateFolder, result);
-// };
-// var dbConnection = require('./src/db_connectors/mysql.js').connect(dbSettings);
-// dbConnection.getTableDefinition('modelizor_test', 'pets', callback);
+let confFile = fs.readFileSync(confFilePath, "utf8")
+let confs = JSON.parse(confFile)
 
 confs.forEach((conf) => {
     let i = 0;
@@ -44,7 +32,8 @@ confs.forEach((conf) => {
             driver: conf.driver,
             schema: conf.schema,
             dbGetter: conf.dbGetter,
-            imports: conf.imports
+            imports: conf.imports,
+            outputdir: path + "/" + conf.outputdir
         }
 
         let rows = dbConnection.execute(queries.getTableDefinitionQuery(relevantConf))
