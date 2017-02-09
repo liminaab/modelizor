@@ -1,5 +1,7 @@
 var upperCamelCase = require('uppercamelcase');
 var camelCase = require('camelcase');
+var pluralize = require('pluralize');
+
 var helpers = require('../../src/helpers')
 
 function getVariableDeclaration(paramInfo) { // private
@@ -24,33 +26,105 @@ function createGetSet(paramInfo) { // public
         '	}\n';
 }
 
-function createGetSetHasOne(paramInfo, typeName) { // public
+function relationHasOne(conf, paramInfo) {
+    let result = {};
+    if (helpers.isHasOne(conf.fk_prefix, paramInfo)) {
 
-    let annotation = '@Id @ManyToOne(cascade = CascadeType.ALL)'
-    return `
-    // ---- ----   ${upperCamelCase(typeName)}  ---- ---- //
-    ${annotation}
-    public ${upperCamelCase(typeName)} get${upperCamelCase(typeName)} () {
-        //if null get from db with ${paramInfo.COLUMN_NAME}
-        return  ${camelCase(typeName)};
+        let name = helpers.removeTrailingId(paramInfo.COLUMN_NAME);
+        let typeName = upperCamelCase(name);
+        let variableName = camelCase(name);
+        result.field = '    private ' + typeName + " " + variableName + ";";
+        result.imports = [conf.models_import_path + "." + typeName + ";"];
+        result.methods = createGetSetHasOne(paramInfo, typeName, variableName)
+        return result
     }
-    public void set${upperCamelCase(typeName)} (${upperCamelCase(typeName)}  ${camelCase(typeName)} ) {
-        this.${camelCase(typeName)} = ${camelCase(typeName)};
+}
+
+function createGetSetHasOne(paramInfo, typeName, variableName) { // public
+
+    let annotation = `@Id @ManyToOne(cascade = CascadeType.ALL)`
+    return `
+    // ---- ----   ${typeName}  ---- ---- //
+    ${annotation}
+    public ${typeName} get${typeName} () {
+        //if null get from db with ${paramInfo.COLUMN_NAME}
+        return ${variableName};
+    }
+    public void set${typeName} (${typeName}  ${variableName} ) {
+        this.${variableName}Id = ${variableName}.Id;
+        this.${variableName} = ${variableName};
     };
 `
 }
 
-
-function relationHasOne(conf, paramInfo) {
+function relationHasMany(conf, relationInfo) {
     let result = {};
-    if (helpers.isHasOne(conf.fk_prefix, paramInfo)) {
-        let name = helpers.removeTrailingId(paramInfo.COLUMN_NAME);
-        result.field = '    private JPA' + upperCamelCase(name) + " " + camelCase(name) + ";";
-        result.import = conf.models_import_path + "." + upperCamelCase(name) + ";"
-        result.methods = createGetSetHasOne(paramInfo, name)
-        return result
-    }
+    let typeName = upperCamelCase(pluralize.singular(relationInfo.TABLE_NAME));
+    let variableName = camelCase(relationInfo.TABLE_NAME)
+    result.field = '    private List<' + typeName + "> " + variableName + ";";
+    result.imports = [conf.models_import_path + "." + typeName, "java.util.ArrayList", "java.util.List"]
+    result.methods = createGetSetHasMany(relationInfo, typeName, variableName)
+    return result
+
 }
+
+function createGetSetHasMany(relationInfo, typeName, variableName) { // public
+    let singularVariableName = pluralize.singular(variableName)
+    let annotation = `@Id @OneToMany(cascade = CascadeType.ALL)`
+    return `
+    // ---- ----   ${pluralize(typeName)}  ---- ---- //
+    ${annotation}
+    public List<${typeName}> get${typeName} () {
+        //if null get from db with ${relationInfo.COLUMN_NAME}
+        return  ${variableName};
+    }
+    public void set${typeName} (List<${typeName}>  ${variableName} ) {
+        this.${variableName} = ${variableName};
+    };
+    public boolean add${typeName} (${typeName}  ${singularVariableName} ) {
+        return this.${variableName}.add(${singularVariableName});
+    };
+    public boolean remove${typeName} (${typeName}  ${singularVariableName} ) {
+        return this.${variableName}.remove(${singularVariableName});
+    };
+`
+}
+
+function relationMany2Many(conf, relationInfo) {
+    let result = {};
+    let name = helpers.removeTrailingId(relationInfo.COLUMN_NAME)
+    let typeName = upperCamelCase(pluralize.singular(name));
+    let variableName = camelCase(pluralize(name))
+    result.field = '    private List<' + typeName + "> " + variableName + ";";
+    result.imports = [conf.models_import_path + "." + typeName, "java.util.ArrayList", "java.util.List"]
+    result.methods = createGetSetMany2Many(relationInfo, typeName, variableName)
+    return result
+
+}
+
+function createGetSetMany2Many(relationInfo, typeName, variableName) { // public
+    let singularVariableName = pluralize.singular(variableName)
+    let annotation = `@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="${relationInfo.TABLE_NAME}")`
+    return `
+    // ---- ----   ${pluralize(typeName)}  ---- ---- //
+    ${annotation}
+    public List<${typeName}> get${typeName} () {
+        //if null get from  ${relationInfo.TABLE_NAME}
+        return  ${variableName};
+    }
+    public void set${typeName} (List<${typeName}>  ${variableName} ) {
+        this.${variableName} = ${variableName};
+    };
+    public boolean add${typeName} (${typeName}  ${singularVariableName} ) {
+        return this.${variableName}.add(${singularVariableName});
+    };
+    public boolean remove${typeName} (${typeName}  ${singularVariableName} ) {
+        return this.${variableName}.remove(${singularVariableName});
+    };
+`
+}
+
 
 function createVariableUpper(paramInfo) { // private
     return upperCamelCase(createVariable(paramInfo));
@@ -87,6 +161,7 @@ function getType(paramInfo) { // private
             return 'Boolean';
         case 'double':
         case 'decimal':
+        case 'numeric':
             return 'Double';
         case 'float':
             return 'Float';
@@ -104,7 +179,7 @@ function getType(paramInfo) { // private
 
 exports.createGetSet = createGetSet;
 exports.getVariableDeclaration = getVariableDeclaration;
-// exports.relationHasMany = relationHasMany;
+exports.relationHasMany = relationHasMany;
 exports.relationHasOne = relationHasOne;
 // exports.copyField = copyField;
-// exports.relationMany2Many = relationMany2Many;
+exports.relationMany2Many = relationMany2Many;

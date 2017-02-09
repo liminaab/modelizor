@@ -3,7 +3,7 @@ var pluralize = require('pluralize');
 
 function createBody(tableName) {
     return '' +
-        'package ' + tableName + ';\n' +
+        'package ' + upperCamelCase(pluralize.singular(tableName)) + ';\n' +
         '\n' +
         'IMPORTS' +
         '\n' +
@@ -15,7 +15,7 @@ function createBody(tableName) {
         '@Entity\n' +
         '@Table(name=\"' + tableName + '\")\n' +
         '@Audited\n' +
-        'public class ' + upperCamelCase(pluralize.singular(tableName)) + ' {\n' +
+        'public class ' + upperCamelCase(pluralize.singular(tableName)) + '  implements Serializable{\n' +
         '\n' +
         'VARIABLES' +
         '\n\n' +
