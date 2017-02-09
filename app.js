@@ -7,7 +7,6 @@ let queries = require('./src/helpers/queries.js');
 let config = require('./src/conf');
 let Q = require('q')
 
-
 let argument = process.argv[2];
 
 if (argument === undefined || argument === "help" || argument === "-h" || argument === "--help") {
@@ -18,8 +17,6 @@ if (argument == "init") {
     spitOutDefaultConf()
     return
 }
-
-
 
 let confs = config.get(argument)
 
@@ -38,7 +35,8 @@ confs.forEach((conf) => {
             schema: conf.schema,
             dbGetter: conf.dbGetter,
             imports: conf.imports,
-            outputdir: conf.outputdir
+            outputdir: conf.outputdir,
+            models_import_path: conf.models_import_path
         }
 
         let rows = dbConnection.execute(queries.getTableDefinitionQuery(relevantConf))
@@ -57,14 +55,12 @@ confs.forEach((conf) => {
                 many2Many: many2Many.value,
             }
             fileCreator.createFile(relevantConf, rows);
-
         }).catch((err) => {
             console.log(err)
         }).finally(() => {
             dbConnection.close();
         })
     })
-
 })
 
 function spitOutDefaultConf() {
@@ -76,11 +72,12 @@ function spitOutDefaultConf() {
     "password": "p4ssw0rd",
     "database": "mydb",
     "schema": "public",
+    "fk_prefix": "fk_",
     "target": "go",
     "dbGetter": "app.DB",
     "imports": ["project/app"],
     "tables": ["users", "products", "orders"],
-    "fk_prefix": "fk_"
+    "models_import_path":"com.limina.www",
 }`
     fs.writeFileSync(filename, content, "utf8", "w");
 }

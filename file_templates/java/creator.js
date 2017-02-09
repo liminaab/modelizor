@@ -1,20 +1,39 @@
-function create(results) {
+var upperCamelCase = require('uppercamelcase');
+var pluralize = require('pluralize');
+
+function create(conf, results) {
     var generatorModel = require('./model.js');
-    var generatorParam = require('./param.js');
+    var field = require('./param.js');
+    console.log(results)
+    let tableName = results.ownColumns[0].TABLE_NAME;
+    var body = generatorModel.createBody(upperCamelCase(tableName));
 
-    var tableName = results[0].TABLE_NAME;
-    var body = generatorModel.createBody(tableName);
+    console.log(results)
+    let fields = results.ownColumns.map((item) => {
+        return field.getVariableDeclaration(item)
+    })
 
-    var paramsBody = '';
-    var variableDeclarations = '';
-    for (var i = 0; i < results.length; i++) {
-        variableDeclarations += generatorParam.getVariableDeclaration(results[i]);
-        paramsBody += generatorParam.createBody(results[i]);
+    let methods = results.ownColumns.map((item) => {
+        return field.createGetSet(item);
+    })
+
+    results.ownColumns.forEach((row) => {
+        let f = field.relationHasOne(conf, row)
+        if (f !== undefined) {
+            fields.push(f.field)
+            conf.imports.push(f.import)
+            methods.push(f.methods)
+        }
+    })
+
+    importString = "import " + conf.imports.join(";\nimport ") + ";"
+    body = body.replace("IMPORTS", importString);
+    body = body.replace('VARIABLES', fields.join("\n"));
+    body = body.replace('PARAMS', methods.join("\n"));
+    return {
+        name: tableName + ".java",
+        content: body
     }
-
-    body = body.replace('VARIABLES', variableDeclarations);
-    body = body.replace('PARAMS', paramsBody);
-    console.log(body);
 
 }
 

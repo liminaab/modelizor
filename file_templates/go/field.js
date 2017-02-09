@@ -1,6 +1,7 @@
 var upperCamelCase = require('uppercamelcase');
 var camelCase = require('camelcase');
 var pluralize = require('pluralize');
+var helpers = require('../../src/helpers')
 
 function structField(paramInfo) {
     return createVariableUpper(paramInfo.COLUMN_NAME) + '   ' + getType(paramInfo);
@@ -12,7 +13,7 @@ function copyField(paramInfo) {
 
 //this one was easy to join in the main select, thats why we do a check on the column instead to see if there is a relation
 function relationHasOne(fkPrefix, paramInfo) {
-    if (isHasOne(fkPrefix, paramInfo)) {
+    if (helpers.isHasOne(fkPrefix, paramInfo)) {
         return createVariableUpper(paramInfo.COLUMN_NAME.replace(/_id$/, '')) + " " + createVariableUpper(paramInfo.COLUMN_NAME.replace(/_id$/, ''))
     }
 }
@@ -32,11 +33,6 @@ function relationMany2Many(relationInfo) {
 //@TODO: make function for this that checks different formats for "YES", depending on db, if there are differences
 function isNullable(paramInfo) {
     return paramInfo.IS_NULLABLE === "YES";
-}
-
-//@TODO: this should be generic, not only for go
-function isHasOne(fkPrefix, paramInfo) {
-    return paramInfo.CONSTRAINT_NAME !== null && paramInfo.CONSTRAINT_NAME.indexOf(fkPrefix) !== -1
 }
 
 function createVariableUpper(dbName) { // private

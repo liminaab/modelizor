@@ -5,7 +5,7 @@
  const fs = require('fs')
 
  function create(conf, results) {
-
+     //@TODO: refactor and make consistent across targets, feels pretty hacky atm
      tableName = results.ownColumns[0].TABLE_NAME;
      let typeName = type.create(tableName);
      let importObj = {};
@@ -32,9 +32,6 @@
          return row !== undefined
      }))
 
-     //@TODO: Add belongsTo
-
-     //@TODO: Add audit for many2many?
      //@TODO: Add option to toggle if there should be audit functionality in the conf
      let audTableName = tableName + "_aud";
 
