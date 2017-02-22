@@ -39,17 +39,25 @@ function create(conf, results) {
         methods.push(f.methods)
     })
 
-    // fields = fields.concat(results.many2Many.map((row) => {
-    //     return field.relationMany2Many(row);
-    // }))
-
-
+    paramsNotId = results.ownColumns.filter(row => {
+       
+        return row.COLUMN_NAME != "id"
+    })
+    console.log(paramsNotId)
+    let c1 = field.createConstructor(tableName, paramsNotId)
+    nonNullables = paramsNotId.filter(row => row.IS_NULLABLE == 'NO')
+    let c2 = field.createConstructor(tableName, nonNullables)
+    constructors = [c1]
+    if(c1 != c2) {
+        constructors.push(c2)
+    }
     let importsUnique = removeImportDuplicates(conf.imports);
 
     importString = "import " + importsUnique.join(";\nimport ") + ";"
     body = body.replace("IMPORTS", importString);
     body = body.replace('VARIABLES', fields.join("\n"));
     body = body.replace('PARAMS', methods.join("\n"));
+    body = body.replace('CONSTRUCTOR', constructors.join("\n\n"));
     return {
         name: tableName + ".java",
         content: body

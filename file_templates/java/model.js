@@ -22,7 +22,7 @@ function createBody(tableName) {
         '	public ' + upperCamelCase(pluralize.singular(tableName)) + '() {\n' +
         '		// Auto-generated from Modelizor\n' +
         '	}\n' +
-        '\n' +
+        'CONSTRUCTOR \n\n' +
         'PARAMS\n' +
         '}\n' +
         '';

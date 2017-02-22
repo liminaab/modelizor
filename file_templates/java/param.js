@@ -147,6 +147,24 @@ function columnAnnotation(paramInfo) { // private
 
 }
 
+function createConstructor(tableName, params) {
+    if (params.length == 0) {
+        return ""
+    }
+    let cArgs = params.map(p => {
+        return `${getType(p)} ${createVariable(p)}`
+    })
+    let cBody = params.map(p => {
+        return `this.${createVariable(p)} = ${createVariable(p)}`
+    })
+    constructorName = `	public ${upperCamelCase(pluralize.singular(tableName))}(${cArgs.join(', ')}) `
+    constructorBody = `{
+		${cBody.join(';\n\t\t')}
+	}`
+
+    return constructorName + constructorBody
+}
+
 function getType(paramInfo) { // private
     var dbType = paramInfo.DATA_TYPE;
     switch (dbType) {
@@ -181,5 +199,5 @@ exports.createGetSet = createGetSet;
 exports.getVariableDeclaration = getVariableDeclaration;
 exports.relationHasMany = relationHasMany;
 exports.relationHasOne = relationHasOne;
-// exports.copyField = copyField;
+exports.createConstructor = createConstructor;
 exports.relationMany2Many = relationMany2Many;
