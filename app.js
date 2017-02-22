@@ -65,7 +65,7 @@ confs.forEach((conf) => {
 
 function spitOutDefaultConf() {
     let filename = "modelizor_template_" + Date.now() + ".conf"
-    let content = `[{
+    let content = `{
     "driver": "pg",
     "host": "localhost",
     "user": "postgres",
@@ -77,7 +77,7 @@ function spitOutDefaultConf() {
     "dbGetter": "app.DB",
     "imports": ["project/app"],
     "tables": ["users", "products", "orders"],
-    "models_import_path":"com.limina.www",
+    "models_import_path":"com.limina.www"
 }`
     fs.writeFileSync(filename, content, "utf8", "w");
 }
