@@ -40,10 +40,8 @@ function create(conf, results) {
 	})
 
 	paramsNotId = results.ownColumns.filter(row => {
-	   
 		return row.COLUMN_NAME != "id"
 	})
-	console.log(paramsNotId)
 	let c1 = field.createConstructor(tableName, paramsNotId)
 	nonNullables = paramsNotId.filter(row => row.IS_NULLABLE == 'NO')
 	let c2 = field.createConstructor(tableName, nonNullables)
@@ -59,7 +57,7 @@ function create(conf, results) {
 	body = body.replace('PARAMS', methods.join("\n"));
 	body = body.replace('CONSTRUCTOR', constructors.join("\n\n"));
 	return {
-		name: tableName + ".java",
+		name: upperCamelCase(pluralize.singular(tableName)) + ".java",
 		content: body
 	}
 

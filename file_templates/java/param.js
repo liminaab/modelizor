@@ -42,7 +42,7 @@ function relationHasOne(conf, paramInfo) {
 
 function createGetSetHasOne(paramInfo, typeName, variableName) { // public
 
-	let annotation = `@Id @ManyToOne`
+	let annotation = `@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)`
 	return `
 	// ---- ----   ${typeName}  ---- ---- //
 	${annotation}
@@ -68,17 +68,19 @@ function relationHasMany(conf, relationInfo) {
 
 }
 
-function createGetSetHasMany(relationInfo, typeName, variableName) { // public
+function createGetSetHasMany(relationInfo, typeName, variableName, currentType) { // public
+	console.log(relationInfo, variableName)
 	let singularVariableName = pluralize.singular(variableName)
-	let annotation = `@Id @OneToMany(cascade = CascadeType.ALL)`
+	let typeNamePlural = pluralize(typeName)
+	let annotation = `@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "${camelCase(helpers.removeTrailingId(relationInfo.COLUMN_NAME))}", orphanRemoval = true)`
 	return `
 	// ---- ----   ${pluralize(typeName)}  ---- ---- //
 	${annotation}
-	public List<${typeName}> get${typeName} () {
+	public List<${typeName}> get${typeNamePlural} () {
 		//if null get from db with ${relationInfo.COLUMN_NAME}
 		return  ${variableName};
 	}
-	public void set${typeName} (List<${typeName}>  ${variableName} ) {
+	public void set${typeNamePlural} (List<${typeName}>  ${variableName} ) {
 		this.${variableName} = ${variableName};
 	};
 	public boolean add${typeName} (${typeName}  ${singularVariableName} ) {
