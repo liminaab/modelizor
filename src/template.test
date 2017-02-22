@@ -1,0 +1,5 @@
+Here is a sample template {{=it.f.ucc("hello_world")}}
+
+
+{{~it.fields.ownColumns :value:index}}	this.{{=value.COLUMN_NAME}} = {{=value.COLUMN_NAME}};
+{{~}}
