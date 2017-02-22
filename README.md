@@ -17,7 +17,7 @@ Please note that Modelizor is a tool for automatic code generation, i.e. it is n
 
 ### Note:
 The project is in "get it working, then refactor"-stage (before refactoring). The structure is going to be remade to use templates(probably doT) for generation so you can customize the output files to your liking and add more functionality.
-However, it should basically be working, at least as a work releiver if you need to make alot of models with relations (you will probably be .
+However, it should basically be working, at least as a work releiver if you need to make alot of models with relations (you will probably have to change annotations for hibernate).
 
 ## Quickstart
 
