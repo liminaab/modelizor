@@ -42,7 +42,7 @@ function relationHasOne(conf, paramInfo) {
 
 function createGetSetHasOne(paramInfo, typeName, variableName) { // public
 
-    let annotation = `@Id @ManyToOne(cascade = CascadeType.ALL)`
+    let annotation = `@Id @ManyToOne`
     return `
     // ---- ----   ${typeName}  ---- ---- //
     ${annotation}
