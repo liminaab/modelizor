@@ -7,7 +7,6 @@ function validateConf(conf) {
     check(!conf.target, 'Must have property "target" (' + possibleTargets.join(", ") + ')');
     check(!conf.driver, 'Must have property "driver" (' + possibleDrivers.join(", ") + ')');
     check(!conf.user, 'Must have property "user" (db user to connect as)');
-    check(!conf.password, 'Must have property password (for db)');
     check(!conf.database, 'Must have property "database" (name of database)');
     check(!conf.schema, 'Must have property "schema" (name of schema)');
     check(!conf.tables.length > 0, 'Must specify at least one table');
