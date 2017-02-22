@@ -1,9 +1,9 @@
 let drivers = require("../drivers")
 
 function getTableDefinitionQuery(conf) {
-    switch (conf.driver) {
-        case drivers.mysql:
-            return `SELECT 
+	switch (conf.driver) {
+		case drivers.mysql:
+			return `SELECT 
 						C.TABLE_NAME AS TABLE_NAME, 
 						C.COLUMN_NAME AS COLUMN_NAME, 
 						C.COLUMN_DEFAULT AS COLUMN_DEFAULT, 
@@ -26,8 +26,8 @@ function getTableDefinitionQuery(conf) {
 						C.TABLE_NAME =  '${conf.table}'  AND 
 						C.TABLE_SCHEMA =  '${conf.schema}';`;
 
-        case drivers.postgres:
-            return `SELECT 
+		case drivers.postgres:
+			return `SELECT 
 						C.TABLE_NAME AS TABLE_NAME, 
 						C.COLUMN_NAME AS COLUMN_NAME, 
 						C.COLUMN_DEFAULT AS COLUMN_DEFAULT, 
@@ -51,17 +51,17 @@ function getTableDefinitionQuery(conf) {
 						C.TABLE_SCHEMA =  '${conf.schema}' 
 						 ;`;
 
-        default:
-            console.error("Unsupported driver in getTableDefinitionQuery:", conf.driver)
-            break;
-    }
+		default:
+			console.error("Unsupported driver in getTableDefinitionQuery:", conf.driver)
+			break;
+	}
 }
 
 
 function getRelationsToTable(conf) {
-    switch (conf.driver) {
-        case drivers.postgres:
-            return `SELECT 
+	switch (conf.driver) {
+		case drivers.postgres:
+			return `SELECT 
 						KCU.TABLE_NAME,
 						KCU.COLUMN_NAME
 					FROM 
@@ -83,25 +83,25 @@ function getRelationsToTable(conf) {
 						CCU.TABLE_SCHEMA = '${conf.schema}' AND
 						KCU.TABLE_NAME NOT IN(${getMany2Many(conf,true)})
 						;`
-        default:
-            console.error("Unsupported driver in getRelationsToTable: ", conf.driver)
-            break;
+		default:
+			console.error("Unsupported driver in getRelationsToTable: ", conf.driver)
+			break;
 
-    }
+	}
 
 }
 
 //Gets the other column name in linking tables that are linking to conf.table
 function getMany2Many(conf, asSubQuery) {
-    let fields = "";
-    if (asSubQuery) {
-        fields = "KCU2.table_name";
-    } else {
-        fields = "KCU2.column_name, KCU2.table_name";
-    }
-    switch (conf.driver) {
-        case drivers.postgres:
-            let q = `SELECT 
+	let fields = "";
+	if (asSubQuery) {
+		fields = "KCU2.table_name";
+	} else {
+		fields = "KCU2.column_name, KCU2.table_name";
+	}
+	switch (conf.driver) {
+		case drivers.postgres:
+			let q = `SELECT 
 						${fields} 
 					FROM 
 						INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE AS CCU
@@ -132,12 +132,12 @@ function getMany2Many(conf, asSubQuery) {
 						CCU.TABLE_SCHEMA = '${conf.schema}'`
 
 
-            return q
-        default:
-            console.error("Unsupported driver in getRelationsToTable: ", conf.driver)
-            break;
+			return q
+		default:
+			console.error("Unsupported driver in getRelationsToTable: ", conf.driver)
+			break;
 
-    }
+	}
 
 }
 

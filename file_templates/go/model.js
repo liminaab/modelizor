@@ -5,13 +5,13 @@ var fs = require('fs');
 
 function create(typeName, fields, audCopyFields, audTable, imports, dbGetter) {
 
-    let fieldString = fields.join("\n\t")
+	let fieldString = fields.join("\n\t")
 
-    let audCopy = audCopyFields.join("\n\t")
+	let audCopy = audCopyFields.join("\n\t")
 
-    var typeNameAud = typeName + "Aud";
+	var typeNameAud = typeName + "Aud";
 
-    return `package models
+	return `package models
 
 ${imports}
 
@@ -42,7 +42,7 @@ func(t ${typeName}) AfterSave() {
 }
 
 func(${typeNameAud}) TableName() string {
-    return "${audTable}"
+	return "${audTable}"
 }
 `
 }
