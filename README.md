@@ -20,9 +20,14 @@ The project is in "get it working, then refactor"-stage (before refactoring). Th
 However, it should basically be working, at least as a work releiver if you need to make alot of models with relations (you will probably have to change annotations for hibernate).
 
 ## Quickstart
-
-`... to be defined ...`
-
+```bash 
+git clone git@github.com:liminaab/modelizor.git && cd modelizor && npm i -g . && modelizor init
+```
+then edit the file it created with the database connection info etc. Then run 
+```bash 
+modelizor [conf_file_name]
+``` 
+and it will output the files in the output folder specified in the configs output dir (relative to the config file)
 ## How it works
 
 The app connects directly to the dabase via a node library for every type of database. SQL queries are used to extract the table definitions.
