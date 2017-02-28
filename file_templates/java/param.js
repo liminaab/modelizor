@@ -193,7 +193,7 @@ function getType(paramInfo) { // private
 			return 'String';
 		case 'date':
 		case 'timestamp with time zone':
-			return 'ZonedDateTime';
+			return 'Timestamp';
 		default:
 			throw new Error('Can\'t handle data type:' + dbType);
 	}
