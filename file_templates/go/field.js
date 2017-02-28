@@ -62,7 +62,7 @@ function getType(paramInfo) {
 		case 'double':
 		case 'decimal':
 		case 'numeric':
-
+		case 'double precision':
 			result = 'float64';
 			break;
 		case 'float':

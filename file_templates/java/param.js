@@ -167,6 +167,7 @@ function createConstructor(tableName, params) {
 	return constructorName + constructorBody
 }
 
+//@TODO: this needs refactoring into a single method, make func that takes an object instead with {double: "Double" or "float64" depending on language}
 function getType(paramInfo) { // private
 	var dbType = paramInfo.DATA_TYPE;
 	switch (dbType) {
@@ -182,6 +183,7 @@ function getType(paramInfo) { // private
 		case 'double':
 		case 'decimal':
 		case 'numeric':
+		case 'double precision':
 			return 'Double';
 		case 'float':
 			return 'Float';
